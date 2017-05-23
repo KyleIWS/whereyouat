@@ -5,7 +5,7 @@ function initMap() {
     console.log("callback works");
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 0, lng: 0},
-        zoom: 12
+        zoom: 15
     });
 
     infoWindow = new google.maps.InfoWindow;
@@ -18,16 +18,22 @@ function initMap() {
                 lng: position.coords.longitude
             };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent("Locaiton Found");
-            infoWindow.open(map);
-            map.setCenter(pos);
-        }, function() {
+            var currLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+
+            // plot the currLocation on Google Maps, or handle accordingly:
+
+            new google.maps.Marker({ title: 'Current Location',
+                                    map: map, 
+                                    position: currLocation 
+            });
+
+            map.setCenter(currLocation);
+
+        }, function(error) {
             console.log("ERROR: Geolocaiton found, but not able to load map");
-            infoWindow.open(map);
+            console.log(error.code + " " + error.message);
         }); 
     } else {
         console.log("ERROR: Geolocation not enabled");
-        infoWindow.open(map);
     };
 }
